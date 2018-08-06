@@ -1,0 +1,9 @@
+
+
+<div>
+  <% if !session[:user_id]%>
+    <a href="/users/signin">Sign In</a>
+  <% else %>
+    <a href="/users/logout">Log Out</a>
+  <% end %>
+</div>
