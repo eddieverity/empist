@@ -3,6 +3,10 @@ class DrinksController < ApplicationController
 def index
   @history = Order.where('user_id = ?', session[:user_id]).reverse
   @admin_history = Order.where('status = ?', "pending").reverse
+  @admin_accepted = Order.where('status = ?', "accepted").reverse
+  @admin_denied = Order.where('status = ?', "denied").reverse
+  @admin_completed = Order.where('status = ?', "completed").reverse
+  @admin_cancelled = Order.where('status = ?', "cancelled").reverse
 end
 
 def order
@@ -37,7 +41,7 @@ end
 
 def status
   @order = Order.find_by('id = ?', params[:order_id])
-        @order.update(user_params)
+        @order.update(status: params[:order][:status], comment: params[:order][:comment])
         redirect_to '/drinks'
 end
 

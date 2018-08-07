@@ -9,11 +9,6 @@
       document.getElementById("cream_sugar").style.display = 'block'
     }
   }
-
-  
-
-    
-
 </script>  
 <div>
   <% if !session[:user_id]%>
@@ -71,7 +66,7 @@
   <% if @history %>
     <% @history.each do |h| %>
       <div>
-      <%= h.item %> <%= h.status %><br>
+      <%= h.item %> <%= h.status %> <%= h.comment %><br>
       </div>
     <% end %>
   <% else %>
@@ -84,7 +79,7 @@
 <% if session[:user_admin] == true %>
   <h1>You're an admin</h1>
 
-  <% if @admin_history %>
+  <% if @admin_history.length > 0 %>
     <h3>Pending Orders</h3>
     <% @admin_history.each do |a| %>
       <div>
@@ -104,21 +99,150 @@
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <select name="order[status]" class="form-control">
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="accepted">Accepted</option>
+            <option value="denied">Denied</option>
           </select>
+          <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
           <input type="submit" value="Update Status" class="btn btn-primary">
         </form>
-        
-
       </div>
     <% end %>
   <% else %>
     <h3>No Pending Orders</h3>
   <% end %>
 
+  <% if @admin_accepted.length > 0 %>
+    <h3>Accepted Orders</h3>
+    <% @admin_accepted.each do |q| %>
+      <div>
+        <%= q.item %>
+        <% if q.item != "OrangeJuice" %> 
+          Cream:<%= q.cream %> 
+          Sugar:<%= q.sugar %> 
+        <% end %>
+        <%= q.updated_at.strftime("Order placed on %m/%d/%Y") %>  <%= q.updated_at.strftime("at %I:%M%p") %>
+
+        <form action="/drinks/delete/<%=q.id%>" method="POST">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="submit" value="Delete" class="btn btn-primary">
+        </form>
+        Status: <%= q.status %> 
+        <form action="/drinks/status/<%=q.id%>" method="POST">
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <select name="order[status]" class="form-control">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
+          <input type="submit" value="Update Status" class="btn btn-primary">
+        </form>
+      </div>
+    <% end %>
+  <% else %>
+    <h3>No Accepted Orders</h3>
+  <% end %>
+
+  <% if @admin_completed.length > 0 %>
+    <h3>Completed Orders</h3>
+    <% @admin_completed.each do |c| %>
+      <div>
+        <%= c.item %>
+        <% if c.item != "OrangeJuice" %> 
+          Cream:<%= c.cream %> 
+          Sugar:<%= c.sugar %> 
+        <% end %>
+        <%= c.updated_at.strftime("Order placed on %m/%d/%Y") %>  <%= c.updated_at.strftime("at %I:%M%p") %>
+
+        <form action="/drinks/delete/<%=c.id%>" method="POST">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+          <input type="submit" value="Delete" class="btn btn-primary">
+        </form>
+        Status: <%= c.status %> 
+        <form action="/drinks/status/<%=c.id%>" method="POST">
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <select name="order[status]" class="form-control">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
+          <input type="submit" value="Update Status" class="btn btn-primary">
+        </form>
+      </div>
+    <% end %>
+  <% else %>
+    <h3>No Completed Orders</h3>
+  <% end %>
+
+  <% if @admin_cancelled.length > 0 %>
+    <h3>Cancelled Orders</h3>
+    <% @admin_cancelled.each do |x| %>
+      <div>
+        <%= x.item %>
+        <% if x.item != "OrangeJuice" %> 
+          Cream:<%= x.cream %> 
+          Sugar:<%= x.sugar %> 
+        <% end %>
+        <%= x.updated_at.strftime("Order placed on %m/%d/%Y") %>  <%= x.updated_at.strftime("at %I:%M%p") %>
+
+        <form action="/drinks/delete/<%=x.id%>" method="POST">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="submit" value="Delete" class="btn btn-primary">
+        </form>
+        Status: <%= x.status %> 
+        <form action="/drinks/status/<%=x.id%>" method="POST">
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <select name="order[status]" class="form-control">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
+          <input type="submit" value="Update Status" class="btn btn-primary">
+        </form>
+      </div>
+    <% end %>
+  <% else %>
+    <h3>No Cancelled Orders</h3>
+  <% end %>
   
+  <% if @admin_denied.length > 0 %>
+    <h3>Denied Orders</h3>
+    <% @admin_denied.each do |d| %>
+      <div>
+        <%= d.item %>
+        <% if d.item != "OrangeJuice" %> 
+          Cream:<%= d.cream %> 
+          Sugar:<%= d.sugar %> 
+        <% end %>
+        <%= d.updated_at.strftime("Order placed on %m/%d/%Y") %>  <%= d.updated_at.strftime("at %I:%M%p") %>
+
+        <form action="/drinks/delete/<%=d.id%>" method="POST">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="submit" value="Delete" class="btn btn-primary">
+        </form>
+        Status: <%= d.status %> 
+        <form action="/drinks/status/<%=d.id%>" method="POST">
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <select name="order[status]" class="form-control">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
+          <input type="submit" value="Update Status" class="btn btn-primary">
+        </form>
+      </div>
+    <% end %>
+  <% else %>
+    <h3>No Denied Orders</h3>
+  <% end %>
 
 
 <% end %>

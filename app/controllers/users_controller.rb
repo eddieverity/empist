@@ -15,7 +15,7 @@ class UsersController < ApplicationController
         
         if @user.save
             session[:user_id] = @user.id
-            session[:user_email = @user.email
+            session[:user_email] = @user.email
             session[:user_admin] = @user.admin
             redirect_to '/drinks'
         else
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
       if @user && @user.authenticate(params[:user][:password])
 
           session[:user_id] = @user.id
-          session[:user_email = @user.email
+          session[:user_email] = @user.email
           session[:user_admin] = @user.admin
           redirect_to '/drinks'
       else
