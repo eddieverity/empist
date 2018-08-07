@@ -18,7 +18,7 @@ development:
   database: sample_postgres_development
   pool: 5
   username: sample_postgres
-  password:
+  password: secret
   host: localhost
 
   # Connect on a TCP socket. Omitted by default since the client uses a
@@ -45,8 +45,9 @@ test:
   database: sample_postgres_test
   pool: 5
   username: sample_postgres
-  password:
+  password: secret
   host: localhost
+  
 
 production:
   adapter: postgresql
@@ -54,5 +55,5 @@ production:
   database: sample_postgres_production
   pool: 5
   username: sample_postgres
-  password:
+  password: secret
   host: localhost
