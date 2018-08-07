@@ -12,15 +12,18 @@
 
 ActiveRecord::Schema.define(version: 20180805031601) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "orders", force: :cascade do |t|
     t.string "item"
-    t.integer "sugar"
-    t.integer "cream"
-    t.string "status"
+    t.string "cream"
+    t.string "sugar"
     t.integer "user_id"
+    t.string "comment"
+    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "comment"
   end
 
   create_table "users", force: :cascade do |t|
@@ -28,8 +31,8 @@ ActiveRecord::Schema.define(version: 20180805031601) do
     t.string "last_name"
     t.string "email"
     t.string "password_digest"
-    t.boolean "admin"
     t.string "code"
+    t.boolean "admin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
