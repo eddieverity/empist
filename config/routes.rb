@@ -6,4 +6,19 @@ Rails.application.routes.draw do
   post 'users/create'
   get 'users/logout'
   post 'users/login'
+
+  get 'drinks' => 'drinks#index'
+
+  patch 'drinks/edit/:order_id' => 'drinks#update'
+
+  post 'drinks/order/:user_id' => 'drinks#order'
+
+  post 'drinks/delete/:order_id' => 'drinks#delete'
+
+  post 'drinks/accept/:order_id' => 'drinks#accept'
+
+  post 'drinks/deny/:order_id' => 'drinks#deny'
+
+  post 'drinks/status/:order_id' => 'drinks#status'
+
 end

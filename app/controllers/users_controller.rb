@@ -7,9 +7,6 @@ class UsersController < ApplicationController
         @user = User.new(user_params)
         @code = 'secret_code'
         
-        puts '*****'
-        puts @user
-        puts '*****'
         if @user[:code] == @code
           @user.admin = true
         else
@@ -18,8 +15,9 @@ class UsersController < ApplicationController
         
         if @user.save
             session[:user_id] = @user.id
+            session[:user_email = @user.email
             session[:user_admin] = @user.admin
-            redirect_to '/'
+            redirect_to '/drinks'
         else
             flash[:register] = @user.errors.full_messages
             redirect_back(fallback_location: users_signin_path)
@@ -32,8 +30,9 @@ class UsersController < ApplicationController
       if @user && @user.authenticate(params[:user][:password])
 
           session[:user_id] = @user.id
+          session[:user_email = @user.email
           session[:user_admin] = @user.admin
-          redirect_to '/'
+          redirect_to '/drinks'
       else
           flash[:login] = ["Invalid Email or Password"]
           redirect_back(fallback_location: users_signin_path)

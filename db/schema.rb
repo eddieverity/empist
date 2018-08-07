@@ -16,8 +16,11 @@ ActiveRecord::Schema.define(version: 20180805031601) do
     t.string "item"
     t.integer "sugar"
     t.integer "cream"
+    t.string "status"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "comment"
   end
 
   create_table "users", force: :cascade do |t|

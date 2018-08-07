@@ -1,0 +1,125 @@
+<script>
+  function cream_sugar(selectElem) {
+    var item = selectElem.options[selectElem.selectedIndex].value;
+    console.log(item)
+    if ( item == 'OrangeJuice' ) {
+      document.getElementById("cream_sugar").style.display = 'none'
+    }
+    else {
+      document.getElementById("cream_sugar").style.display = 'block'
+    }
+  }
+
+  
+
+    
+
+</script>  
+<div>
+  <% if !session[:user_id]%>
+    <a href="/users/signin">Sign In</a>
+  <% else %>
+    <a href="/users/logout">Log Out</a>
+  <% end %>
+</div>
+
+
+<h1>Place Drink Order</h1>
+
+<form action="/drinks/order/<%= session[:user_id] %>" method="POST">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  
+<select name="order[item]" class="form-control" onChange="cream_sugar(this);">
+    <option selected disabled>Choose Beverage</option>
+    <option value="Filter">Filter Coffee</option>
+    <option value="Espresso">Espresso</option>
+    <option value="Cappuccino">Cappuccino</option>
+    <option value="Greek">Greek</option>
+    <option value="Frappe">Frappe</option>
+    <option value="Latte">Latte</option>
+    <option value="Tea">Tea</option>
+    <option value="OrangeJuice">Orange Juice</option>
+</select>
+
+<div id="cream_sugar" style="display:none">
+<select name="order[cream]" class="form-control">
+  <option selected disabled>On a scale from 0 - Eric Clapton, how much Cream in your beverage?</option>
+  <option value="0">0</option>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+
+<select name="order[sugar]" class="form-control">
+<option selected disabled>On a scale from 0 - 5, how much Sugar in your beverage?</option>
+  <option value="0">0</option>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+</div>
+<input type="submit" value="Submit Order" class="btn btn-primary">
+
+</form>
+<% if session[:user_admin] == false %>
+<h1>Your Order History</h1>
+<div>
+  <% if @history %>
+    <% @history.each do |h| %>
+      <div>
+      <%= h.item %> <%= h.status %><br>
+      </div>
+    <% end %>
+  <% else %>
+    <h3>No Order History</h3>
+  <%end%>  
+</div>
+<% end %>
+
+
+<% if session[:user_admin] == true %>
+  <h1>You're an admin</h1>
+
+  <% if @admin_history %>
+    <h3>Pending Orders</h3>
+    <% @admin_history.each do |a| %>
+      <div>
+        <%= a.item %>
+        <% if a.item != "OrangeJuice" %> 
+          Cream:<%= a.cream %> 
+          Sugar:<%= a.sugar %> 
+        <% end %>
+        <%= a.updated_at.strftime("Order placed on %m/%d/%Y") %>  <%= a.updated_at.strftime("at %I:%M%p") %>
+
+        <form action="/drinks/delete/<%=a.id%>" method="POST">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="submit" value="Delete" class="btn btn-primary">
+        </form>
+        Status: <%= a.status %> 
+        <form action="/drinks/status/<%=a.id%>" method="POST">
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <select name="order[status]" class="form-control">
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input type="submit" value="Update Status" class="btn btn-primary">
+        </form>
+        
+
+      </div>
+    <% end %>
+  <% else %>
+    <h3>No Pending Orders</h3>
+  <% end %>
+
+  
+
+
+<% end %>
+   
