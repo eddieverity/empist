@@ -5,4 +5,8 @@ class ApplicationController < ActionController::Base
   def require_login
     redirect_to '/users/signin' unless session[:user_id]
   end
+
+  def index
+    redirect_to '/users/signin' unless session[:user_id]
+  end
 end

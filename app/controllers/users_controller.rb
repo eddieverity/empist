@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  def signin
+  def index
+    redirect_to '/users/signin' unless session[:user_id]
   end
 
   # create new user

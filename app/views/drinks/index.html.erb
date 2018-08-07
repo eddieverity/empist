@@ -10,7 +10,7 @@
     }
   }
 </script>  
-<div>
+<div class="log">
   <% if !session[:user_id]%>
     <a href="/users/signin">Sign In</a>
   <% else %>
@@ -18,71 +18,84 @@
   <% end %>
 </div>
 
-
-<h1>Place Drink Order</h1>
-
-<form action="/drinks/order/<%= session[:user_id] %>" method="POST">
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+<div class="container panel panel-default">
   
-<select name="order[item]" class="form-control" onChange="cream_sugar(this);">
-    <option selected disabled>Choose Beverage</option>
-    <option value="Filter">Filter Coffee</option>
-    <option value="Espresso">Espresso</option>
-    <option value="Cappuccino">Cappuccino</option>
-    <option value="Greek">Greek</option>
-    <option value="Frappe">Frappe</option>
-    <option value="Latte">Latte</option>
-    <option value="Tea">Tea</option>
-    <option value="OrangeJuice">Orange Juice</option>
-</select>
+  <h1>Place Drink Order</h1>
+  <div class="pillbox">
+  <form action="/drinks/order/<%= session[:user_id] %>" method="POST">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    
+  <select name="order[item]" class="form-control" onChange="cream_sugar(this);">
+      <option selected disabled>Choose Beverage</option>
+      <option value="Filter">Filter Coffee</option>
+      <option value="Espresso">Espresso</option>
+      <option value="Cappuccino">Cappuccino</option>
+      <option value="Greek">Greek</option>
+      <option value="Frappe">Frappe</option>
+      <option value="Latte">Latte</option>
+      <option value="Tea">Tea</option>
+      <option value="OrangeJuice">Orange Juice</option>
+  </select>
 
-<div id="cream_sugar" style="display:none">
-<select name="order[cream]" class="form-control">
-  <option selected disabled>On a scale from 0 - Eric Clapton, how much Cream in your beverage?</option>
-  <option value="0">0</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-</select>
+  <div id="cream_sugar" style="display:none">
+  <select name="order[cream]" class="form-control">
+    <option selected disabled>On a scale from 0 - Eric Clapton, how much Cream in your beverage?</option>
+    <option value="0" selected="selected">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
 
-<select name="order[sugar]" class="form-control">
-<option selected disabled>On a scale from 0 - 5, how much Sugar in your beverage?</option>
-  <option value="0">0</option>
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-</select>
+  <select name="order[sugar]" class="form-control">
+  <option selected disabled>On a scale from 0 - 5, how much Sugar in your beverage?</option>
+    <option value="0" selected="selected">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+  </div>
+  <input type="submit" value="Submit Order" class="btn btn-primary">
+  </div>
 </div>
-<input type="submit" value="Submit Order" class="btn btn-primary">
-
-</form>
-<% if session[:user_admin] == false %>
-<h1>Your Order History</h1>
-<div>
-  <% if @history %>
-    <% @history.each do |h| %>
-      <div>
-      <%= h.item %> <%= h.status %> <%= h.comment %><br>
-      </div>
-    <% end %>
-  <% else %>
-    <h3>No Order History</h3>
-  <%end%>  
+  </form>
+  <% if session[:user_admin] == false %>
+  <div class="container">
+    <h1>Your Order History</h1>
+      <% if @history %>
+        <table class="table table-dark">
+          <tr>
+            <th>Order</th>
+            <th>Status</th>
+            <th>Comment</th>
+          </tr>
+        <% @history.each do |h| %>
+          <tr>
+            <td><%= h.item %></td>
+            <td><%= h.status %></td>
+            <td><%= h.comment %></td>
+          </tr>
+        <% end %>
+        </table>
+      <% else %>
+        <h3>No Order History</h3>
+      <%end%>  
+  </div>
 </div>
 <% end %>
 
 
 <% if session[:user_admin] == true %>
-  <h1>You're an admin</h1>
+  
 
   <% if @admin_history.length > 0 %>
-    <h3>Pending Orders</h3>
-    <% @admin_history.each do |a| %>
-      <div>
+    <div class="container panel panel-default ">
+      <h3>Pending Orders</h3>
+      <% @admin_history.each do |a| %>
+        <div class="bg-warning pillbox">
         <%= a.item %>
         <% if a.item != "OrangeJuice" %> 
           Cream:<%= a.cream %> 
@@ -99,22 +112,29 @@
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <select name="order[status]" class="form-control">
+            <option selected disabled>Accept / Deny Order</option>
             <option value="accepted">Accepted</option>
             <option value="denied">Denied</option>
           </select>
           <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
           <input type="submit" value="Update Status" class="btn btn-primary">
         </form>
-      </div>
-    <% end %>
-  <% else %>
-    <h3>No Pending Orders</h3>
-  <% end %>
+        </div>
+        <% end %>
+        <% else %>
+        <div class="container panel panel-default">
+          <h3>No Pending Orders</h3>
+        </div>
+        <% end %>
+    </div>
 
+  
   <% if @admin_accepted.length > 0 %>
+  <div class="container panel panel-default">
     <h3>Accepted Orders</h3>
     <% @admin_accepted.each do |q| %>
-      <div>
+    <div class="bg-success pillbox">
+      
         <%= q.item %>
         <% if q.item != "OrangeJuice" %> 
           Cream:<%= q.cream %> 
@@ -131,6 +151,7 @@
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <select name="order[status]" class="form-control">
+            <option selected disabled>Change Order Status</option>
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
@@ -138,16 +159,22 @@
           <input type="text" name="order[comment]" placeholder="Comment" class="form-control">
           <input type="submit" value="Update Status" class="btn btn-primary">
         </form>
-      </div>
+      
+    </div>
     <% end %>
+  </div>
   <% else %>
+  <div class="container panel panel-default">
     <h3>No Accepted Orders</h3>
+  </div>
   <% end %>
 
   <% if @admin_completed.length > 0 %>
+  <div class="container panel panel-default">
     <h3>Completed Orders</h3>
     <% @admin_completed.each do |c| %>
-      <div>
+
+      <div class="bg-info pillbox">
         <%= c.item %>
         <% if c.item != "OrangeJuice" %> 
           Cream:<%= c.cream %> 
@@ -165,6 +192,7 @@
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <select name="order[status]" class="form-control">
+            <option selected disabled>Change Order Status</option>
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
@@ -174,14 +202,18 @@
         </form>
       </div>
     <% end %>
+  </div>
   <% else %>
+  <div class="container panel panel-default">
     <h3>No Completed Orders</h3>
+  </div>
   <% end %>
 
   <% if @admin_cancelled.length > 0 %>
+    <div class="container panel panel-default">
     <h3>Cancelled Orders</h3>
     <% @admin_cancelled.each do |x| %>
-      <div>
+      <div class="bg-danger pillbox">
         <%= x.item %>
         <% if x.item != "OrangeJuice" %> 
           Cream:<%= x.cream %> 
@@ -198,6 +230,7 @@
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <select name="order[status]" class="form-control">
+            <option selected disabled>Change Order Status</option>
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
@@ -207,14 +240,18 @@
         </form>
       </div>
     <% end %>
+  </div>
   <% else %>
+  <div class="container panel panel-default">
     <h3>No Cancelled Orders</h3>
+  </div>
   <% end %>
   
   <% if @admin_denied.length > 0 %>
+  <div class="container panel panel-default">
     <h3>Denied Orders</h3>
     <% @admin_denied.each do |d| %>
-      <div>
+      <div class="bg-danger pillbox">
         <%= d.item %>
         <% if d.item != "OrangeJuice" %> 
           Cream:<%= d.cream %> 
@@ -231,6 +268,7 @@
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <select name="order[status]" class="form-control">
+            <option selected disabled>Change Order Status</option>
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
@@ -240,8 +278,11 @@
         </form>
       </div>
     <% end %>
+  </div>
   <% else %>
+  <div class="container panel panel-default">
     <h3>No Denied Orders</h3>
+  </div>
   <% end %>
 
 

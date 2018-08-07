@@ -1,6 +1,7 @@
 class DrinksController < ApplicationController
 
 def index
+  redirect_to '/users/signin' unless session[:user_id]
   @history = Order.where('user_id = ?', session[:user_id]).reverse
   @admin_history = Order.where('status = ?', "pending").reverse
   @admin_accepted = Order.where('status = ?', "accepted").reverse
