@@ -15,7 +15,7 @@ def order
   if @order.save    
       redirect_to '/drinks'
   else
-      flash[:register] = @user.errors.full_messages
+      flash[:order] = @order.errors.full_messages
       redirect_back(fallback_location: users_signin_path)
   end
 end
